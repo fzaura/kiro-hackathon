@@ -6,7 +6,16 @@ from pathlib import Path
 
 from playwright.async_api import async_playwright
 
-WAV = Path("_fake-mic.wav").resolve()
+import os
+import shutil
+import tempfile
+
+# Chrome's --use-file-for-fake-audio-capture cannot cope with spaces in the
+# path, so stage the wav somewhere boring.
+_staged = Path(tempfile.gettempdir()) / "montyfakemic.wav"
+shutil.copyfile("_fake-mic.wav", _staged)
+WAV = _staged
+assert " " not in str(WAV), f"still a space in {WAV}"
 EXPECTED = "lambda"
 
 
@@ -53,9 +62,9 @@ async def main() -> int:
         await page.mouse.down()
         print("holding the mic button…")
 
-        await asyncio.sleep(1.0)
+        await asyncio.sleep(1.5)
         listening = await page.evaluate("() => window.monty.snapshot()")
-        print("while holding:", listening["animation"], "| listening:", listening["listening"])
+        print("while holding:", listening)
         if not listening["listening"]:
             problems.append("the page is not listening")
         if listening["animation"] != "thinking":
