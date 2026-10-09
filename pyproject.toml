@@ -1,0 +1,18 @@
+[project]
+name = "kiro-character-voice-agent"
+version = "1.0.0"
+description = "Pablo Pineapple, a charismatic senior software engineering mentor from AWS, as a talking 3D character."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.143.0,<1.0.0",
+    "uvicorn[standard]>=0.54.0,<1.0.0",
+    "python-dotenv>=1.2.4,<2.0.0",
+    "boto3>=1.43.0,<2.0.0",
+    "langgraph>=1.2.14,<2.0.0",
+    "langchain-aws>=1.8.1,<2.0.0",
+    "aws-sdk-transcribe-streaming[awscrt]>=0.12.0,<1.0.0",
+]
+
+[tool.uv]
+package = false

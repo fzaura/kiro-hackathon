@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monty Sidewinder &middot; Senior Engineer @ AWS</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%90%8D%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/style.css">
+<link rel="preload" href="/avatars/CoolPineapple.vrm" as="fetch" crossorigin>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/",
+    "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3.5.5/lib/three-vrm.module.min.js"
+  }
+}
+</script>
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+
+<header id="hud">
+  <h1 id="name">&nbsp;</h1>
+  <p id="title">&nbsp;</p>
+  <p id="tagline">&nbsp;</p>
+</header>
+
+<div id="bubble" class="bubble" aria-live="polite"></div>
+
+<div id="state" class="state" hidden>
+  <span class="dot"></span><span id="state-text">thinking</span>
+</div>
+
+<main id="transcript" aria-live="polite" aria-label="Conversation"></main>
+
+<form id="composer" autocomplete="off">
+  <button type="button" id="mic" class="icon-btn" hidden
+          aria-label="Hold to talk" title="Hold to talk (or hold Space)">
+    <span aria-hidden="true">&#127897;</span>
+  </button>
+  <input id="input" type="text" maxlength="500" placeholder="Ask Monty anything&hellip;"
+         aria-label="Your message">
+  <button type="submit" id="send">Send</button>
+  <button type="button" id="dance" class="ghost-btn" title="Make him dance">Dance</button>
+</form>
+
+<p id="toast" class="toast" role="status"></p>
+
+<div id="gate" class="gate">
+  <div class="gate-card">
+    <p class="gate-kicker">Amazon Nova Lite &middot; Amazon Polly &middot; Amazon Transcribe</p>
+    <h2 id="gate-name">Loading&hellip;</h2>
+    <p id="gate-sub" class="gate-sub">Waking up the pineapple</p>
+    <div class="bar"><div id="bar-fill"></div></div>
+    <button id="gate-btn" disabled>Click to start</button>
+    <p class="gate-note">Sound is on. Headphones recommended.</p>
+  </div>
+</div>
+
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>
