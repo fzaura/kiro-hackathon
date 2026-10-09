@@ -449,6 +449,8 @@ window.monty = {
     busy,
     dancing,
     listening,
+    chunks: mic.chunks,
+    socket: socket?.readyState,
     speaking: speaker.speaking,
     mouth: { ...character.mouth },
     emotion: { ...character.emotion },

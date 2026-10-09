@@ -24,10 +24,12 @@ export class Mic {
     this.sink = null;
     this.moduleLoaded = false;
     this.recording = false;
+    this.chunks = 0; // handy when the microphone seems deaf
   }
 
   async start() {
     if (this.recording) return;
+    this.chunks = 0;
     const ctx = await this.getContext();
 
     if (!this.moduleLoaded) {
@@ -46,7 +48,10 @@ export class Mic {
 
     this.source = ctx.createMediaStreamSource(this.stream);
     this.node = new AudioWorkletNode(ctx, 'pcm-downsampler');
-    this.node.port.onmessage = (event) => this.onChunk(event.data);
+    this.node.port.onmessage = (event) => {
+      this.chunks += 1;
+      this.onChunk(event.data);
+    };
 
     // The worklet only runs while it is connected to the graph, so route it
     // into a muted gain node instead of the speakers (no echo that way).
