@@ -1,9 +1,14 @@
 """Temporary: the awkward paths. Errors, no audio, moves, the 30 s cap."""
 
 import asyncio
+import shutil
 import sys
+from pathlib import Path
 
 from playwright.async_api import async_playwright
+
+SERVED = Path("public/_fake-mic.wav")
+shutil.copyfile("_fake-mic.wav", SERVED)
 
 # Keep a handle on the page's socket so we can hand it crafted messages.
 FAKE_MIC = """
@@ -63,8 +68,11 @@ async def main() -> int:
                 "--mute-audio",
             ],
         )
-        context = await browser.new_context(viewport={"width": 1280, "height": 800})
+        context = await browser.new_context(
+            viewport={"width": 1280, "height": 800}, permissions=["microphone"]
+        )
         await context.add_init_script(TAP)
+        await context.add_init_script(FAKE_MIC)
         page = await context.new_page()
         page.on("pageerror", lambda e: problems.append(f"PAGE ERROR: {e}"))
 
@@ -232,6 +240,8 @@ async def main() -> int:
         print("toast:", repr(toast))
 
         await browser.close()
+
+    SERVED.unlink(missing_ok=True)
 
     print("\n--- verdict ---")
     if problems:
