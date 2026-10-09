@@ -61,6 +61,7 @@ let dancing = false;
 let listening = false;
 let micTimer = null;
 let liveLine = null;
+let turn = 0; // so a stale answer cannot grab the stage back
 
 /* ------------------------------------------------------------------ helpers */
 
@@ -243,6 +244,7 @@ function handle(message) {
 
 /** Say one answer out loud: face, bubble, lip sync, then the move. */
 async function perform(message) {
+  const mine = ++turn; // a newer answer wins; this one bows out quietly
   if (liveLine) {
     liveLine.remove();
     liveLine = null;
@@ -260,17 +262,19 @@ async function perform(message) {
     console.error('voice playback failed', err);
     await sleep(readingTime(message.text));
   }
+  if (mine !== turn) return;
 
   hideBubble();
   character.setEmotion('neutral');
   character.setViseme(null);
 
-  await doMove(message.move);
+  await doMove(message.move, mine);
+  if (mine !== turn) return;
   setBusy(false);
 }
 
 /** Bonus B: the move the AI picked for this answer. */
-async function doMove(name) {
+async function doMove(name, mine = turn) {
   const move = name && name !== 'none' ? moves.get(name) : null;
   if (!move) {
     if (!dancing) setPhase('idle');
@@ -284,7 +288,9 @@ async function doMove(name) {
 
   el.state.hidden = true;
   await character.playOnce(move.name);
+  if (mine !== turn) return;
   if (move.recover) await character.playOnce(move.recover, STAND_UP);
+  if (mine !== turn) return;
   setPhase('idle');
 }
 
